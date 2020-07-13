@@ -28,8 +28,8 @@ a.dark {
     border-radius: 0.2em;
     padding: 2em;
     margin: 0 auto;
-    width: 50%;
-    max-width: 400px;
+    width: 60%;
+    max-width: 600px;
 }
 
 .form input[type=submit] {
@@ -50,4 +50,7 @@ a.dark {
     width: 125px;
     margin-right: 1.2em;
     margin-bottom: 1em;
+}
+.navbar {
+background-color: #ffffff;
 }

@@ -5,8 +5,8 @@ from flask_login import UserMixin
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, index=True)
-    email = db.Column(db.String(100), unique=True, index=True)
+    username = db.Column(db.String(20),  index=True)
+    email = db.Column(db.String(100), index=True)
     password = db.Column(db.String(20))
     avatar = db.Column(db.String(20), default='default.jpg')
     zvonki = db.relationship('Zvonok', backref='author', lazy='dynamic')
@@ -30,7 +30,7 @@ class Zvonok(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     phone = db.Column(db.String(140))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_username = db.Column(db.String, db.ForeignKey('user.username'))
 
     def __repr__(self):
         return f'Звонок от: {self.user_id}, текст: {self.body}'

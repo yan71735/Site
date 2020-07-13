@@ -1,9 +1,10 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, ValidationError, EqualTo
-
+from wtforms import StringField, PasswordField, BooleanField, SubmitField,TextAreaField
+from wtforms.validators import DataRequired, ValidationError, EqualTo,Length
+from flask_wtf.file import FileField,FileAllowed
 from mysite.models import User
+
 
 
 class LoginForm(FlaskForm):
@@ -23,12 +24,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Зарегистрироваться!')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
+        user = User.query.filter_by(username=username.data.lower()).first()
         if user is not None:
             raise ValidationError('Используйте другое имя пользователя!')
 
     def validate_email(self, email):
-        user = User.query.filter_by(username=email.data).first()
+        user = User.query.filter_by(username=email.data.lower()).first()
         if user is not None:
             raise ValidationError('Используйте другой email!')
 
@@ -36,7 +37,7 @@ class RegistrationForm(FlaskForm):
 class AccountUpdateForm(FlaskForm):
     username = StringField('Имя пользователя', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
-
+    picture = FileField(validators =[FileAllowed(['jpg','png'])])
     submit = SubmitField('Обновить')
 
     def validate_username(self, username):
@@ -50,3 +51,17 @@ class AccountUpdateForm(FlaskForm):
             user = User.query.filter_by(username=email.data).first()
             if user is not None:
                 raise ValidationError('Используйте другой email!')
+class FeedbackForm(FlaskForm):
+    phone = StringField(
+        'Ваш номер телефона (на всякий случай)',
+        validators=[
+            Length(9, 11),
+            DataRequired()
+        ])
+    body = TextAreaField(
+        'Текст: ',
+        validators=[
+            Length(1, 200),
+            DataRequired()
+        ])
+    submit = SubmitField('Отослать')
