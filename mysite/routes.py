@@ -1,19 +1,21 @@
+import os
+import secrets
+
+from PIL import Image
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
-from PIL import Image
-import secrets
-import os
+
 from mysite import app, db
-from mysite.forms import LoginForm, RegistrationForm, AccountUpdateForm,FeedbackForm
-from mysite.models import User,Zvonok
+from mysite.forms import LoginForm, RegistrationForm, AccountUpdateForm, FeedbackForm
+from mysite.models import User, Zvonok
 
 
-@app.route('/',methods=['GET','POST'])
-@app.route('/index',methods=['GET','POST'])
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
     form = FeedbackForm()
     if form.validate_on_submit():
-        zvonok = Zvonok(body= form.body.data,phone=form.phone.data,user_username=current_user.username)
+        zvonok = Zvonok(body=form.body.data, phone=form.phone.data, user_username=current_user.username)
         db.session.add(zvonok)
         db.session.commit()
         flash('Обращение передано','success')
@@ -64,7 +66,7 @@ def register():
 
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data.lower, email=form.email.data.lower())
+        user = User(username=form.username.data.lower(), email=form.email.data.lower())
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -105,4 +107,4 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    return render_template('account.html', title='Личный кабинет', avatar=avatar, form=form)
+    return render_template('account.html', title='Личный кабинет', avatar=avatar, form=form, feedback=feedback)
